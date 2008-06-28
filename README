@@ -1,0 +1,33 @@
+Ascurpic - Asc' Your Picture
+============================
+
+License: GPL v3
+Author:  ubitux [www.pilule-rouge.net]
+
+Requirements:
+------------
+
+ - *nix
+
+Compilation:
+-----------
+
+% make re
+
+Usage:
+-----
+
+Usage: ./ascurpic -f <filename> -t <filename> -o <filename> [-s <num> -n <num> -c <num>]
+
+ -f <filename>  Bitmap to convert. This parameter needs the -t and -o ones.
+ -t <filename>  File with some text to use
+ -o <filename>  The Web Page you want to generate
+ -s <num>       Font size (in px)
+ -n <num>       Number of char for 1px
+ -c <color>     Background color in hex (e.g. : -c a0b1c2)
+
+Examples:
+--------
+
+% ./ascurpic -f examples/tux.bmp -t examples/tux.txt -o examples/tux.htm
+% ./ascurpic -f examples/kodamas.bmp -t examples/kodamas.txt -o examples/kodamas.htm -c 000000
