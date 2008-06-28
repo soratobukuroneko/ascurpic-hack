@@ -1,4 +1,5 @@
 #include <fcntl.h>
+#include <stdio.h>
 #include <unistd.h>
 #include "ascurpic.h"
 #include "bitmap.h"

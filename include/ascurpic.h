@@ -1,9 +1,11 @@
 #ifndef _ASCURPIC_H_
 # define _ASCURPIC_H_
 
-# include <stdlib.h>
-# include <stdio.h>
-# include <unistd.h>
+#ifdef __cplusplus
+// Required to use C functions inside our C++ code.
+extern "C" {
+#endif
+
 # include "bitmap.h"
 
 /* Default values */
@@ -60,5 +62,9 @@ void			disp_info_bmp(t_bitmap *bmp);
 int			parse_opts(param_t *p, int ac, char **av);
 void			write_page(param_t *p);
 void			*xmalloc(int size);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* !_ASCURPIC_H_ */
