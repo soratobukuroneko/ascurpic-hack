@@ -5,6 +5,7 @@
 
 class QLabel;
 class QLineEdit;
+class QPushButton;
 class QSpinBox;
 
 /**
@@ -12,7 +13,7 @@ class QSpinBox;
  */
 class AscurpiQ : public QMainWindow
 {
-	//Q_OBJECT
+	Q_OBJECT
 
 public:
 	AscurpiQ(QWidget *parent = 0);
@@ -20,22 +21,30 @@ public:
 public slots:
 
 private slots:
+	void selectBmpFile();
+	void selectOutputFile();
+	void selectTextFile();
 
 private:
+	void createConnections();
 	void createLayout();
 
-	QLabel    *backgroundColorLabel;
-	QLineEdit *backgroundColorLineEdit;
-	QLabel    *bmpInFileLabel;
-	QLineEdit *bmpInFileLineEdit;
-	QLabel    *charPerPixelLabel;
-	QSpinBox  *charPerPixelSpinBox;
-	QLabel    *fontSizeLabel;
-	QSpinBox  *fontSizeSpinBox;
-	QLabel    *htmlOutFileLabel;
-	QLineEdit *htmlOutFileLineEdit;
-	QLabel    *txtInFileLabel;
-	QLineEdit *txtInFileLineEdit;
+	QPushButton *backgroundColorButton;
+	QLabel      *backgroundColorLabel;
+	QLineEdit   *backgroundColorLineEdit;
+	QPushButton *bmpInFileButton;
+	QLabel      *bmpInFileLabel;
+	QLineEdit   *bmpInFileLineEdit;
+	QLabel      *charPerPixelLabel;
+	QSpinBox    *charPerPixelSpinBox;
+	QLabel      *fontSizeLabel;
+	QSpinBox    *fontSizeSpinBox;
+	QPushButton *htmlOutFileButton;
+	QLabel      *htmlOutFileLabel;
+	QLineEdit   *htmlOutFileLineEdit;
+	QPushButton *txtInFileButton;
+	QLabel      *txtInFileLabel;
+	QLineEdit   *txtInFileLineEdit;
 };
 
 #endif
