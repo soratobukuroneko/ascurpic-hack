@@ -11,7 +11,7 @@ extern int	optopt;
 extern int	opterr;
 extern int	optreset;
 
-static int	open_bmp(t_bitmap **bmp, char *arg)
+int	open_bmp(t_bitmap **bmp, const char *arg)
 {
   int		fd;
 
@@ -29,7 +29,7 @@ static int	open_bmp(t_bitmap **bmp, char *arg)
   return (0);
 }
 
-static int	open_file(FILE **f, char *fname, char *perm)
+int	open_file(FILE **f, const char *fname, const char *perm)
 {
   *f = fopen(fname, perm);
   if(*f == NULL)

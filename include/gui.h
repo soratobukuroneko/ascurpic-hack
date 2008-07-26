@@ -2,6 +2,7 @@
 #define GUI_H
 
 #include <QMainWindow>
+#include "../include/ascurpic.h"
 
 class QLabel;
 class QLineEdit;
@@ -21,6 +22,7 @@ public:
 public slots:
 
 private slots:
+	void generate() const;
 	void selectBmpFile();
 	void selectOutputFile();
 	void selectTextFile();
@@ -28,6 +30,8 @@ private slots:
 private:
 	void createConnections();
 	void createLayout();
+	void enableGenerateButton();
+	const char* qStrToChar(const QString&) const;
 
 	QPushButton *backgroundColorButton;
 	QLabel      *backgroundColorLabel;
@@ -39,6 +43,7 @@ private:
 	QSpinBox    *charPerPixelSpinBox;
 	QLabel      *fontSizeLabel;
 	QSpinBox    *fontSizeSpinBox;
+	QPushButton *generateButton;
 	QPushButton *htmlOutFileButton;
 	QLabel      *htmlOutFileLabel;
 	QLineEdit   *htmlOutFileLineEdit;

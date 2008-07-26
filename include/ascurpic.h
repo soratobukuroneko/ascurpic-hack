@@ -63,6 +63,9 @@ int			parse_opts(param_t *p, int ac, char **av);
 void			write_page(param_t *p);
 void			*xmalloc(int size);
 
+int open_file(FILE**, const char*, const char*);
+int open_bmp(t_bitmap**, const char*);
+
 #ifdef __cplusplus
 }
 #endif
