@@ -19,15 +19,20 @@ class AscurpiQ : public QMainWindow
 public:
 	AscurpiQ(QWidget *parent = 0);
 
-public slots:
-
 private slots:
+	/// Generates the HTML page.
 	void generate() const;
+	/// Display a color selection dialog.
+	void selectBackgroundColor();
+	// @{
+	/// Display a file selection dialog.
 	void selectBmpFile();
 	void selectOutputFile();
 	void selectTextFile();
+	// @}
 
 private:
+	/// Establishes connections between widgets signals and slots.
 	void createConnections();
 	void createLayout();
 	void enableGenerateButton();
@@ -35,7 +40,12 @@ private:
 
 	QPushButton *backgroundColorButton;
 	QLabel      *backgroundColorLabel;
-	QLineEdit   *backgroundColorLineEdit;
+	QLabel      *backgroundRColorLabel;
+	QSpinBox    *backgroundRColorSpinBox;
+	QLabel      *backgroundGColorLabel;
+	QSpinBox    *backgroundGColorSpinBox;
+	QLabel      *backgroundBColorLabel;
+	QSpinBox    *backgroundBColorSpinBox;
 	QPushButton *bmpInFileButton;
 	QLabel      *bmpInFileLabel;
 	QLineEdit   *bmpInFileLineEdit;

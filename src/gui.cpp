@@ -1,12 +1,11 @@
 #include <cstdlib>
-#include <QDebug>
+#include <QColorDialog>
 #include <QFileDialog>
 #include <QGridLayout>
 #include <QGroupBox>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
-#include <QRegExpValidator>
 #include <QSpinBox>
 #include "../include/gui.h"
 
@@ -17,8 +16,13 @@
 AscurpiQ::AscurpiQ(QWidget *parent) : QMainWindow(parent)
 {
 	backgroundColorButton   = new QPushButton(tr("&Choose"));
-	backgroundColorLabel    = new QLabel(tr("&Background color:"));
-	backgroundColorLineEdit = new QLineEdit("0x0");
+	backgroundColorLabel    = new QLabel(tr("Background color:"));
+	backgroundRColorLabel   = new QLabel(tr("&R:"));
+	backgroundRColorSpinBox = new QSpinBox();
+	backgroundGColorLabel   = new QLabel(tr("&G:"));
+	backgroundGColorSpinBox = new QSpinBox();
+	backgroundBColorLabel   = new QLabel(tr("&B:"));
+	backgroundBColorSpinBox = new QSpinBox();
 	bmpInFileButton         = new QPushButton(tr("Browse"));
 	bmpInFileLabel          = new QLabel(tr("Bitmap &file:"));
 	bmpInFileLineEdit       = new QLineEdit();
@@ -34,33 +38,28 @@ AscurpiQ::AscurpiQ(QWidget *parent) : QMainWindow(parent)
 	txtInFileLabel          = new QLabel(tr("&Text file:"));
 	txtInFileLineEdit       = new QLineEdit();
 
-	// Matching hexa numbers between 0 and FFFFFFFF
-	QRegExp hexaRegExp("^0x(\\d|[a-fA-F]){1,8}$");
-
 	// Setting labels' buddies
-	backgroundColorLabel->setBuddy(backgroundColorLineEdit);
+	backgroundRColorLabel->setBuddy(backgroundRColorSpinBox);
+	backgroundGColorLabel->setBuddy(backgroundGColorSpinBox);
+	backgroundBColorLabel->setBuddy(backgroundBColorSpinBox);
 	bmpInFileLabel->setBuddy(bmpInFileLineEdit);
 	charPerPixelLabel->setBuddy(charPerPixelSpinBox);
 	fontSizeLabel->setBuddy(fontSizeSpinBox);
 	htmlOutFileLabel->setBuddy(htmlOutFileLineEdit);
 	txtInFileLabel->setBuddy(txtInFileLineEdit);
 
-	// Hexa validator
-	backgroundColorLineEdit->setValidator(new QRegExpValidator(hexaRegExp, backgroundColorLineEdit));
-
 	// Setting spin boxes
 	charPerPixelSpinBox->setValue(1);
 	fontSizeSpinBox->setSuffix(" px");
 	fontSizeSpinBox->setValue(8);
+	backgroundRColorSpinBox->setRange(0, 255);
+	backgroundGColorSpinBox->setRange(0, 255);
+	backgroundBColorSpinBox->setRange(0, 255);
 
 	setWindowTitle("AscurpiQ - Ascurpic Qt GUI");
 	createConnections();
 	createLayout();
 }
-
-/* * * * * * * * *
- * public  slots *
- * * * * * * * * */
 
 /* * * * * *
  * private *
@@ -78,6 +77,9 @@ void AscurpiQ::createConnections()
 
 	connect(generateButton, SIGNAL(clicked()),
 	        this, SLOT(generate()));
+
+	connect(backgroundColorButton, SIGNAL(clicked()),
+	        this, SLOT(selectBackgroundColor()));
 }
 
 void AscurpiQ::createLayout()
@@ -103,14 +105,22 @@ void AscurpiQ::createLayout()
 	// Options group box //
 	QGroupBox   *optionsBox        = new QGroupBox(tr("Options"));
 	QGridLayout *optionsGridLayout = new QGridLayout();
+	QHBoxLayout *rgbLayout         = new QHBoxLayout();
+
+	rgbLayout->addWidget(backgroundRColorLabel);
+	rgbLayout->addWidget(backgroundRColorSpinBox);
+	rgbLayout->addWidget(backgroundGColorLabel);
+	rgbLayout->addWidget(backgroundGColorSpinBox);
+	rgbLayout->addWidget(backgroundBColorLabel);
+	rgbLayout->addWidget(backgroundBColorSpinBox);
 
 	optionsGridLayout->addWidget(backgroundColorLabel, 0, 0);
-	optionsGridLayout->addWidget(backgroundColorLineEdit, 0, 1);
-	//optionsGridLayout->addWidget(backgroundColorButton, 0, 2);
-	optionsGridLayout->addWidget(fontSizeLabel, 1, 0);
-	optionsGridLayout->addWidget(fontSizeSpinBox, 1, 1);
-	optionsGridLayout->addWidget(charPerPixelLabel, 2, 0);
-	optionsGridLayout->addWidget(charPerPixelSpinBox, 2, 1);
+	optionsGridLayout->addLayout(rgbLayout, 1, 0, 1, 2);
+	optionsGridLayout->addWidget(backgroundColorButton, 2, 0, 1, 2);
+	optionsGridLayout->addWidget(fontSizeLabel, 3, 0);
+	optionsGridLayout->addWidget(fontSizeSpinBox, 3, 1, 1, 2);
+	optionsGridLayout->addWidget(charPerPixelLabel, 4, 0);
+	optionsGridLayout->addWidget(charPerPixelSpinBox, 4, 1, 1, 2);
 
 	optionsBox->setLayout(optionsGridLayout);
 
@@ -136,14 +146,16 @@ const char* AscurpiQ::qStrToChar(const QString &qstr) const
 
 void AscurpiQ::generate() const
 {
-	short err = 0;
+	// error counter.
+	unsigned short err = 0;
 
+	// Check if the required file fields are filled.
 	if(bmpInFileLineEdit->text().length() > 0
 	   && txtInFileLineEdit->text().length() > 0
 	   && htmlOutFileLineEdit->text().length() > 0)
 	{
 		param_t params;
-		char   *meSertTropARienCePointeur;
+		//char   *meSertTropARienCePointeur;
 
 		err += open_bmp(&(params.input_bitmap),
 		                qStrToChar(bmpInFileLineEdit->text()));
@@ -154,9 +166,9 @@ void AscurpiQ::generate() const
 		                 qStrToChar(htmlOutFileLineEdit->text()),
 		                 "w");
 
-		params.bgcolor = strtol(qStrToChar(backgroundColorLineEdit->text()),
-		                        &meSertTropARienCePointeur,
-		                        16);
+		params.bgcolor = backgroundRColorSpinBox->value() * 65536
+		                 + backgroundGColorSpinBox->value() * 256
+		                 + backgroundBColorSpinBox->value();
 
 		params.nbcharpx = charPerPixelSpinBox->value();
 		params.fontsize = fontSizeSpinBox->value();
@@ -167,6 +179,24 @@ void AscurpiQ::generate() const
 			write_page(&params);
 			free_bitmap(params.input_bitmap);
 		}
+	}
+}
+
+void AscurpiQ::selectBackgroundColor()
+{
+	QColor newcolor, oldcolor;
+
+	oldcolor = QColor::fromRgb(backgroundRColorSpinBox->value(),
+	                           backgroundGColorSpinBox->value(),
+	                           backgroundBColorSpinBox->value());
+
+	newcolor = QColorDialog::getColor(oldcolor, this);
+
+	if(newcolor.isValid())
+	{
+		backgroundRColorSpinBox->setValue(newcolor.red());
+		backgroundGColorSpinBox->setValue(newcolor.green());
+		backgroundBColorSpinBox->setValue(newcolor.blue());
 	}
 }
 
