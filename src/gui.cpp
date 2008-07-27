@@ -5,6 +5,7 @@
 #include <QGroupBox>
 #include <QLabel>
 #include <QLineEdit>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QSpinBox>
 #include "../include/gui.h"
@@ -75,9 +76,11 @@ void AscurpiQ::createConnections()
 	connect(txtInFileButton, SIGNAL(clicked()),
 	        this, SLOT(selectTextFile()));
 
+	// HTML generation.
 	connect(generateButton, SIGNAL(clicked()),
 	        this, SLOT(generate()));
 
+	// Color selection dialog.
 	connect(backgroundColorButton, SIGNAL(clicked()),
 	        this, SLOT(selectBackgroundColor()));
 }
@@ -107,6 +110,7 @@ void AscurpiQ::createLayout()
 	QGridLayout *optionsGridLayout = new QGridLayout();
 	QHBoxLayout *rgbLayout         = new QHBoxLayout();
 
+	// RGB values line.
 	rgbLayout->addWidget(backgroundRColorLabel);
 	rgbLayout->addWidget(backgroundRColorSpinBox);
 	rgbLayout->addWidget(backgroundGColorLabel);
@@ -135,6 +139,10 @@ void AscurpiQ::createLayout()
 	setCentralWidget(containerWidget);
 }
 
+/**
+ * \param[in] qstr QString object to cast.
+ * \return A C style string representation of qstr.
+ */
 const char* AscurpiQ::qStrToChar(const QString &qstr) const
 {
 	return qstr.toLocal8Bit().data();
@@ -144,7 +152,7 @@ const char* AscurpiQ::qStrToChar(const QString &qstr) const
  * private  slots  *
  * * * * * * * * * */
 
-void AscurpiQ::generate() const
+void AscurpiQ::generate()
 {
 	// error counter.
 	unsigned short err = 0;
@@ -178,6 +186,10 @@ void AscurpiQ::generate() const
 		{
 			write_page(&params);
 			free_bitmap(params.input_bitmap);
+			QMessageBox::information(this,
+			                         tr("Success"),
+			                         tr("Successfully generated file: ")
+			                         + htmlOutFileLineEdit->text());
 		}
 	}
 }
@@ -186,10 +198,12 @@ void AscurpiQ::selectBackgroundColor()
 {
 	QColor newcolor, oldcolor;
 
+	// Current color.
 	oldcolor = QColor::fromRgb(backgroundRColorSpinBox->value(),
 	                           backgroundGColorSpinBox->value(),
 	                           backgroundBColorSpinBox->value());
 
+	// Preselect the current color.
 	newcolor = QColorDialog::getColor(oldcolor, this);
 
 	if(newcolor.isValid())

@@ -21,7 +21,7 @@ public:
 
 private slots:
 	/// Generates the HTML page.
-	void generate() const;
+	void generate();
 	/// Display a color selection dialog.
 	void selectBackgroundColor();
 	// @{
@@ -34,8 +34,9 @@ private slots:
 private:
 	/// Establishes connections between widgets signals and slots.
 	void createConnections();
+	/// Lays out the widgets on the Windows .
 	void createLayout();
-	void enableGenerateButton();
+	/// Convert a QString to a C style string.
 	const char* qStrToChar(const QString&) const;
 
 	QPushButton *backgroundColorButton;

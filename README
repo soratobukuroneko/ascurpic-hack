@@ -2,7 +2,8 @@ Ascurpic - Asc' Your Picture
 ============================
 
 License: GPL v3
-Author:  ubitux [www.pilule-rouge.net]
+Authors: Original author: ubitux [www.pilule-rouge.net]
+         Qt GUI: DarkAn9el [zenephiris.ch]
 
 Requirements:
 ------------
@@ -12,11 +13,14 @@ Requirements:
 Compilation:
 -----------
 
-% make re
+% qmake
+% make
 
 Usage:
 -----
+No arguments to start the GUI.
 
+Otherwise, for the CLI:
 Usage: ./ascurpic -f <filename> -t <filename> -o <filename> [-s <num> -n <num> -c <num>]
 
  -f <filename>  Bitmap to convert. This parameter needs the -t and -o ones.
